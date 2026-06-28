@@ -1,0 +1,86 @@
+/* React Frontend Styles */
+:root {
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --bg-body: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-nav: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --border-color: #e2e8f0;
+}
+
+[data-bs-theme="dark"] {
+  --bg-body: #0f172a;
+  --bg-card: #1e293b;
+  --bg-nav: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --border-color: #334155;
+}
+
+body {
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card {
+  background-color: var(--bg-card);
+  border-color: var(--border-color);
+  transition: background-color 0.3s ease;
+}
+
+.card-header {
+  background-color: var(--bg-nav);
+  border-color: var(--border-color);
+}
+
+.form-control, .form-select {
+  background-color: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+}
+
+.table {
+  color: var(--text-primary);
+}
+
+.table th {
+  border-color: var(--border-color);
+}
+
+.table td {
+  border-color: var(--border-color);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+
+.alert {
+  border-radius: 0.5rem;
+}
+
+.badge {
+  font-weight: 500;
+}
+
+/* Transitions for theme switching */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}

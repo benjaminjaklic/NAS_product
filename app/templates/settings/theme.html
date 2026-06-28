@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+
+{% block title %}Theme Settings - NAS System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .color-picker-group {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    
+    .color-picker-group input[type="color"] {
+        width: 50px;
+        height: 40px;
+        border: 2px solid var(--border-color);
+        border-radius: var(--radius);
+        cursor: pointer;
+        padding: 2px;
+    }
+    
+    .color-picker-group input[type="text"] {
+        width: 100px;
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+    }
+    
+    .color-picker-group label {
+        flex: 1;
+        font-weight: 500;
+    }
+    
+    .theme-preview {
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .preview-nav {
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius);
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .preview-card {
+        padding: 1rem;
+        border-radius: var(--radius);
+        border: 1px solid;
+    }
+    
+    .preset-btn {
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('files.dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('auth.profile') }}">Profile</a></li>
+                    <li class="breadcrumb-item active">Theme Settings</li>
+                </ol>
+            </nav>
+            
+            <h2 class="mb-4"><i class="fas fa-palette me-2"></i>Theme Settings</h2>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Theme Editor -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-sliders-h me-2"></i>Customize Your Theme
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="themeForm">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="action" value="save">
+                        
+                        <!-- Theme Name -->
+                        <div class="mb-4">
+                            <label for="theme_name" class="form-label">Theme Name</label>
+                            <input type="text" class="form-control" id="theme_name" name="theme_name" 
+                                   value="{{ theme.name }}" placeholder="My Custom Theme">
+                        </div>
+                        
+                        <!-- Preset Buttons -->
+                        <div class="mb-4">
+                            <label class="form-label">Quick Presets</label>
+                            <div>
+                                <button type="submit" name="action" value="reset_light" class="btn btn-outline-primary preset-btn">
+                                    <i class="fas fa-sun me-1"></i>Light Theme
+                                </button>
+                                <button type="submit" name="action" value="reset_dark" class="btn btn-outline-secondary preset-btn">
+                                    <i class="fas fa-moon me-1"></i>Dark Theme
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <!-- Primary Colors -->
+                        <h5 class="section-title"><i class="fas fa-tint me-2"></i>Primary Colors</h5>
+                        
+                        <div class="color-picker-group">
+                            <label for="color_primary">Primary Color</label>
+                            <input type="color" id="color_primary" name="color_primary" 
+                                   value="{{ theme.color_primary }}" onchange="updatePreview()">
+                            <input type="text" class="form-control" id="color_primary_text" 
+                                   value="{{ theme.color_primary }}" onchange="syncColorPicker('color_primary')">
+                        </div>
+                        
+                        <div class="color-picker-group">
+                            <label for="color_primary_hover">Primary Hover</label>
+                            <input type="color" id="color_primary_hover" name="color_primary_hover" 
+                                   value="{{ theme.color_primary_hover }}" onchange="updatePreview()">
+                            <input type="text" class="form-control" id="color_primary_hover_text" 
+                                   value="{{ theme.color_primary_hover }}" onchange="syncColorPicker('color_primary_hover')">
+                        </div>
+                        
+                        <!-- Accent Colors -->
+                        <h5 class="section-title mt-4"><i class="fas fa-palette me-2"></i>Accent Colors</h5>
+                        
+                        <div class="color-picker-group">
+                            <label for="color_success">Success</label>
+                            <input type="color" id="color_success" name="color_success" 
+                                   value="{{ theme.color_success }}" onchange="updatePreview()">
+                            <input type="text" class="form-control" value="{{ theme.color_success }}" 
+                                   onchange="syncColorPicker('color_success')">
+                        </div>
+                        
+                        <div class="color-picker-group">
+                            <label for="color_warning">Warning</label>
+                            <input type="color" id="color_warning" name="color_warning" 
+                                   value="{{ theme.color_warning }}" onchange="updatePreview()">
+                            <input type="text" class="form-control" value="{{ theme.color_warning }}" 
+                                   onchange="syncColorPicker('color_warning')">
+                        </div>
+                        
+                        <div class="color-picker-group">
+                            <label for="color_danger">Danger</label>
+                            <input type="color" id="color_danger" name="color_danger" 
+                                   value="{{ theme.color_danger }}" onchange="updatePreview()">
+                            <input type="text" class="form-control" value="{{ theme.color_danger }}" 
+                                   onchange="syncColorPicker('color_danger')">
+                        </div>
+                        
+                        <!-- Background Colors -->
+                        <h5 class="section-title mt-4"><i class="fas fa-fill-drip me-2"></i>Background Colors</h5>
+                        
+                        <div class="color-picker-group">
+                            <label for="bg_body">Page Background</label>
+                            <input type="color" id="bg_body" name="bg_body" 
+                                   value="{{ theme.bg_body }}" onchange="updatePreview()">
+                            <input type="text" class="form-control" value="{{ theme.bg_body }}" 
+                                   onchange="syncColorPicker('bg_body')">
+                        </div>
+                        
+                        <div class="color-picker-group">
+                            <label for="bg_card">Card Background</label>
+                            <input type="color" id="bg_card" name="bg_card" 
+                                   value="{{ theme.bg_card }}" onchange="updatePreview()">
+                            <input type="text" class="form-control" value="{{ theme.bg_card }}" 
+                                   onchange="syncColorPicker('bg_card')">
+                        </div>
+                        
+                        <div class="color-picker-group">
+                            <label for="bg_nav">Navigation Background</label>
+                            <input type="color" id="bg_nav" name="bg_nav" 
+                                   value="{{ theme.bg_nav }}" onchange="updatePreview()">
+                            <input type="text" class="form-control" value="{{ theme.bg_nav }}" 
+                                   onchange="syncColorPicker('bg_nav')">
+                        </div>
+                        
+                        <!-- Text Colors -->
+                        <h5 class="section-title mt-4"><i class="fas fa-font me-2"></i>Text Colors</h5>
+                        
+                        <div class="color-picker-group">
+                            <label for="text_primary">Primary Text</label>
+                            <input type="color" id="text_primary" name="text_primary" 
+                                   value="{{ theme.text_primary }}" onchange="updatePreview()">
+                            <input type="text" class="form-control" value="{{ theme.text_primary }}" 
+                                   onchange="syncColorPicker('text_primary')">
+                        </div>
+                        
+                        <div class="color-picker-group">
+                            <label for="text_secondary">Secondary Text</label>
+                            <input type="color" id="text_secondary" name="text_secondary" 
+                                   value="{{ theme.text_secondary }}" onchange="updatePreview()">
+                            <input type="text" class="form-control" value="{{ theme.text_secondary }}" 
+                                   onchange="syncColorPicker('text_secondary')">
+                        </div>
+                        
+                        <!-- Border Settings -->
+                        <h5 class="section-title mt-4"><i class="fas fa-border-style me-2"></i>Borders</h5>
+                        
+                        <div class="color-picker-group">
+                            <label for="border_color">Border Color</label>
+                            <input type="color" id="border_color" name="border_color" 
+                                   value="{{ theme.border_color }}" onchange="updatePreview()">
+                            <input type="text" class="form-control" value="{{ theme.border_color }}" 
+                                   onchange="syncColorPicker('border_color')">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="border_radius" class="form-label">Border Radius</label>
+                            <select class="form-select" id="border_radius" name="border_radius">
+                                <option value="0" {% if theme.border_radius == '0' %}selected{% endif %}>None (Sharp corners)</option>
+                                <option value="0.25rem" {% if theme.border_radius == '0.25rem' %}selected{% endif %}>Small</option>
+                                <option value="0.375rem" {% if theme.border_radius == '0.375rem' %}selected{% endif %}>Default</option>
+                                <option value="0.5rem" {% if theme.border_radius == '0.5rem' %}selected{% endif %}>Medium</option>
+                                <option value="0.75rem" {% if theme.border_radius == '0.75rem' %}selected{% endif %}>Large</option>
+                                <option value="1rem" {% if theme.border_radius == '1rem' %}selected{% endif %}>Extra Large</option>
+                            </select>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Save Theme
+                            </button>
+                            <a href="{{ url_for('settings.export_theme') }}" class="btn btn-outline-secondary" target="_blank">
+                                <i class="fas fa-download me-2"></i>Export
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Live Preview -->
+        <div class="col-lg-4">
+            <div class="card position-sticky" style="top: 1rem;">
+                <div class="card-header">
+                    <i class="fas fa-eye me-2"></i>Live Preview
+                </div>
+                <div class="card-body">
+                    <div class="theme-preview" id="themePreview">
+                        <!-- Mini Nav Preview -->
+                        <div class="preview-nav" id="previewNav" style="background-color: {{ theme.bg_nav }};">
+                            <span style="color: {{ theme.color_primary }}; font-weight: 600;">NAS System</span>
+                            <span style="color: {{ theme.text_secondary }};">Menu</span>
+                        </div>
+                        
+                        <!-- Mini Card Preview -->
+                        <div class="preview-card" id="previewCard" style="background-color: {{ theme.bg_card }}; border-color: {{ theme.border_color }};">
+                            <h6 style="color: {{ theme.text_primary }}; margin-bottom: 0.5rem;">Card Title</h6>
+                            <p style="color: {{ theme.text_secondary }}; margin-bottom: 0.75rem; font-size: 0.875rem;">
+                                This is preview text showing how your theme looks.
+                            </p>
+                            <button class="btn btn-sm" id="previewBtn" style="background-color: {{ theme.color_primary }}; color: white;">
+                                Primary Button
+                            </button>
+                        </div>
+                        
+                        <!-- Color Swatches -->
+                        <div class="d-flex gap-2 mt-3">
+                            <div class="rounded-circle" id="swatchSuccess" style="width: 24px; height: 24px; background-color: {{ theme.color_success }};"></div>
+                            <div class="rounded-circle" id="swatchWarning" style="width: 24px; height: 24px; background-color: {{ theme.color_warning }};"></div>
+                            <div class="rounded-circle" id="swatchDanger" style="width: 24px; height: 24px; background-color: {{ theme.color_danger }};"></div>
+                        </div>
+                    </div>
+                    
+                    <p class="text-muted small mb-0">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Changes are previewed in real-time. Click "Save Theme" to apply.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updatePreview() {
+    const preview = document.getElementById('themePreview');
+    const previewNav = document.getElementById('previewNav');
+    const previewCard = document.getElementById('previewCard');
+    const previewBtn = document.getElementById('previewBtn');
+    
+    // Get current values
+    const colorPrimary = document.getElementById('color_primary').value;
+    const bgBody = document.getElementById('bg_body').value;
+    const bgCard = document.getElementById('bg_card').value;
+    const bgNav = document.getElementById('bg_nav').value;
+    const textPrimary = document.getElementById('text_primary').value;
+    const textSecondary = document.getElementById('text_secondary').value;
+    const borderColor = document.getElementById('border_color').value;
+    const colorSuccess = document.getElementById('color_success').value;
+    const colorWarning = document.getElementById('color_warning').value;
+    const colorDanger = document.getElementById('color_danger').value;
+    
+    // Update preview elements
+    preview.style.backgroundColor = bgBody;
+    previewNav.style.backgroundColor = bgNav;
+    previewNav.querySelector('span:first-child').style.color = colorPrimary;
+    previewNav.querySelector('span:last-child').style.color = textSecondary;
+    
+    previewCard.style.backgroundColor = bgCard;
+    previewCard.style.borderColor = borderColor;
+    previewCard.querySelector('h6').style.color = textPrimary;
+    previewCard.querySelector('p').style.color = textSecondary;
+    
+    previewBtn.style.backgroundColor = colorPrimary;
+    
+    document.getElementById('swatchSuccess').style.backgroundColor = colorSuccess;
+    document.getElementById('swatchWarning').style.backgroundColor = colorWarning;
+    document.getElementById('swatchDanger').style.backgroundColor = colorDanger;
+    
+    // Update text inputs
+    document.getElementById('color_primary_text').value = colorPrimary;
+}
+
+function syncColorPicker(fieldName) {
+    const textInput = document.querySelector(`input[name="${fieldName}"] + input[type="text"]`);
+    const colorInput = document.getElementById(fieldName);
+    if (textInput && colorInput) {
+        colorInput.value = textInput.value;
+        updatePreview();
+    }
+}
+
+// Initialize preview on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Add change listeners to all color inputs
+    document.querySelectorAll('input[type="color"]').forEach(input => {
+        input.addEventListener('input', updatePreview);
+    });
+});
+</script>
+{% endblock %}

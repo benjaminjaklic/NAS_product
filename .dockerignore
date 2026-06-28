@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+env/
+
+# Node
+node_modules/
+frontend/node_modules/
+
+# Secrets & local config (compose reads .env via env_file at runtime)
+.env
+.env.local
+.env.production
+
+# Runtime data — kept on host volumes, never baked into the image
+files/
+logs/
+instance/
+*.db
+
+# Dev / VCS
+.git/
+.gitignore
+tests/
+*.save
+*.bak
+interview-prep.html
