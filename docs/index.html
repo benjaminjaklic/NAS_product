@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAS System - Self-Hosted File Storage</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #ffffff;
+            --bg-alt: #f9fafb;
+            --border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .nav-links a {
+            margin-left: 32px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .hero {
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto 32px;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .demo {
+            background: var(--bg-alt);
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .demo-placeholder {
+            max-width: 900px;
+            margin: 32px auto 0;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .features {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 48px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .feature-card {
+            padding: 28px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: box-shadow 0.2s;
+        }
+
+        .feature-card:hover {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .feature-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+        }
+
+        .pricing {
+            background: var(--bg-alt);
+            padding: 80px 0;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: white;
+            padding: 36px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.1);
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 16px 0;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            margin: 24px 0;
+            text-align: left;
+        }
+
+        .pricing-card li {
+            padding: 8px 0;
+            color: var(--text-light);
+        }
+
+        .pricing-card li::before {
+            content: "✓";
+            color: var(--primary);
+            font-weight: 700;
+            margin-right: 10px;
+        }
+
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-light);
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">NAS System</a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="https://github.com/benjaminjaklic/NAS_product">GitHub</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Your own private cloud storage, self-hosted</h1>
+            <p>A lightweight, web-based Network Attached Storage platform built with Flask and React. Upload, share, and manage files on your own hardware with multi-user support and role-based access control.</p>
+            <div class="cta-group">
+                <a href="#pricing" class="btn btn-primary">Get a License</a>
+                <a href="https://github.com/benjaminjaklic/NAS_product" class="btn btn-secondary">View on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo">
+        <div class="container">
+            <h2 class="section-title">See it in action</h2>
+            <p style="color: var(--text-light);">Replace this placeholder with a screenshot or embed a short demo video.</p>
+            <div class="demo-placeholder">
+                Demo Video / Screenshot Placeholder
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">What you get</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>File Management</h3>
+                    <p>Drag-and-drop uploads, version history, tagging, preview for images, PDFs, video and audio, plus a live dashboard.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Secure Sharing</h3>
+                    <p>Public share links with optional passwords, expiration dates, one-time downloads, and instant revocation.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Multi-User & Roles</h3>
+                    <p>Role-based access control, per-role storage quotas, speed limits, admin approval, and activity logs.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Notes & Themes</h3>
+                    <p>Personal notes with categories, full-text search, light/dark mode, and full color customization.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Easy Install</h3>
+                    <p>Automated installers for Windows, macOS, and Linux. Docker support included. SQLite works out of the box.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Security</h3>
+                    <p>CSRF protection, secure sessions, bcrypt password hashing, rate limiting, IP blocking, and path traversal prevention.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Simple pricing</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Personal</h3>
+                    <div class="price">$79</div>
+                    <p>One-time license</p>
+                    <ul>
+                        <li>Single user</li>
+                        <li>Personal use</li>
+                        <li>All core features</li>
+                        <li>Email support</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary">Buy Personal</a>
+                </div>
+                <div class="pricing-card featured">
+                    <h3>Small Business</h3>
+                    <div class="price">$199</div>
+                    <p>One-time license</p>
+                    <ul>
+                        <li>Up to 10 users</li>
+                        <li>Commercial use</li>
+                        <li>All core features</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary">Buy Business</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Unlimited</h3>
+                    <div class="price">$499</div>
+                    <p>One-time license</p>
+                    <ul>
+                        <li>Unlimited users</li>
+                        <li>Commercial use</li>
+                        <li>All core features</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary">Buy Unlimited</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>NAS System. Built with Flask, React, and SQLite. Self-host your files.</p>
+            <p style="margin-top: 8px; font-size: 0.9rem;">Contact: your-email@example.com</p>
+        </div>
+    </footer>
+
+</body>
+</html>
