@@ -7,7 +7,15 @@ A self-hosted Network Attached Storage platform built with Flask and React. Uplo
 ![React](https://img.shields.io/badge/React-18-61dafb.svg)
 ![SQLite](https://img.shields.io/badge/SQLite-Default-lightgrey.svg)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supported-336791.svg)
-![License](https://img.shields.io/badge/License-Proprietary-red.svg)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+
+> **Note:** This is a personal/hobby project under active development. Bugs are expected and not everything is guaranteed to work out of the box — use at your own risk, and please open an issue if something breaks.
+
+---
+
+## About the Project
+
+Hi — I'm a student who has been building this in my free time for over two years. It started as a way to have my own private cloud storage without paying for one, and grew into a full multi-user platform with sharing, versioning, and admin tools along the way. I'm open-sourcing it so others can use it, learn from it, or build on top of it.
 
 ---
 
@@ -207,17 +215,20 @@ Copy `.env.example` to `.env` and edit as needed. The installers do this automat
 | `MAIL_USE_TLS` | `true` | Enable STARTTLS |
 | `MAIL_USERNAME` | *(empty)* | SMTP username |
 | `MAIL_PASSWORD` | *(empty)* | SMTP password or app-specific password |
+| `MAIL_USE_SSL` | `false` | Enable SSL instead of STARTTLS |
+| `MAIL_DEFAULT_SENDER` | `NAS System <noreply@example.com>` | From address for outgoing email |
+| `REDIS_URL` | *(empty)* | Optional — enables shared rate limiting across workers/restarts. Falls back to in-memory limiter if blank |
+| `GITHUB_REPO` | *(empty)* | `owner/repo` — enables in-app update checks against GitHub releases |
 | `SESSION_COOKIE_SECURE` | `False` | Set `True` only when serving over HTTPS |
-| `ADMIN_USERNAME` | `admin` | Pre-filled admin username for setup wizard |
-| `ADMIN_EMAIL` | `admin@example.com` | Pre-filled admin email for setup wizard |
-| `ADMIN_PASSWORD` | `admin` | Pre-filled admin password for setup wizard |
+| `ADMIN_USERNAME` | *(set your own)* | Pre-filled admin username for setup wizard |
+| `ADMIN_EMAIL` | *(set your own)* | Pre-filled admin email for setup wizard |
+| `ADMIN_PASSWORD` | *(set your own)* | Pre-filled admin password for setup wizard — must be 8+ chars with a letter and a number |
 | `DEMO_USERNAME` | *(empty)* | If set, creates a demo account on startup |
 | `DEMO_EMAIL` | *(empty)* | Demo account email |
 | `DEMO_PASSWORD` | *(empty)* | Demo account password |
 | `ACCOUNT_ACTIVATION_MODE` | `admin_approval` | `admin_approval`, `email_verification`, `both`, or `none` |
-| `AI_API_URL` | *(empty)* | Optional external AI summarization endpoint |
 
-> **Important:** If `SECRET_KEY` is not set, the app generates a random key on each startup, which invalidates all existing sessions. Always set a fixed key for production.
+> **Important:** Never commit `.env` to version control. Set a fixed `SECRET_KEY` for production — if unset, the app generates a random key on each startup, which invalidates all existing sessions. Replace all placeholder credentials (`ADMIN_PASSWORD`, `SECRET_KEY`, etc.) before deploying anywhere other than local testing.
 
 ---
 
@@ -287,7 +298,6 @@ NAS-System-Deploy/
 │   ├── forms.py                 # WTForms form definitions
 │   ├── routes/
 │   │   ├── admin.py             # Admin dashboard, user management, roles, logs
-│   │   ├── ai_dashboard.py      # Optional AI summarization dashboard
 │   │   ├── api.py               # Notes CRUD API
 │   │   ├── auth.py              # Authentication, registration, profile, password reset
 │   │   ├── files.py             # File upload, download, delete, tags, sharing, versioning
@@ -598,10 +608,4 @@ In the `files/users/<user_id>/` directory under the project root, organized by u
 
 ## License
 
-**Copyright © 2026. All rights reserved.**
-
-This software is licensed for personal or commercial use by the purchaser only. Redistribution, resale, or sharing of the source code is strictly prohibited.
-
-THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. The author makes no guarantees regarding functionality, compatibility, or fitness for a particular purpose.
-
-Bug fixes may be provided at the author's discretion. Feature updates and improvements may be released if there is sufficient demand. No specific timeline or commitment is guaranteed for either.
+MIT — see [LICENSE](LICENSE) for full text. Free to use, modify, and distribute; provided as-is with no warranty.
